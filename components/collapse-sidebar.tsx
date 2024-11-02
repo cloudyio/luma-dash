@@ -1,4 +1,4 @@
-import {Boxes, ChevronDown, ChevronRight, Package, PartyPopper, Shield, Smile} from "lucide-react";
+import {Boxes,ChevronRight, Shield, Smile} from "lucide-react";
 
 
 import {
@@ -9,11 +9,8 @@ import {
 
 
 import {
-    Sidebar,
-    SidebarMenu,
     SidebarMenuButton,
     SidebarMenuItem,
-    SidebarHeader,
     SidebarMenuSubItem,
     SidebarMenuSub,
 } from "@/components/ui/sidebar";

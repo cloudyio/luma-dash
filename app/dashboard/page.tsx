@@ -1,7 +1,6 @@
 import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar"
 import { AppSidebar } from "@/components/app-sidebar"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
-import { Button } from "@/components/ui/button"
 import {
   Card,
   CardContent,
@@ -12,13 +11,7 @@ import {
 } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select"
+
 
 export default function Home() {
   return (
@@ -29,7 +22,6 @@ export default function Home() {
           <SidebarTrigger />
         </div>
 
-        {/* Header with Avatar and Username */}
         <header className="absolute top-0 right-0 p-4 flex items-center space-x-3">
           <Avatar>
             <AvatarImage src="https://github.com/shadcn.ng" />

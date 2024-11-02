@@ -1,5 +1,5 @@
 
-import { Calendar, Home, Inbox, Search, Settings, FileText, Users, ChevronDown, Plus,Puzzle, LayoutDashboard, Terminal, FileClock } from "lucide-react";
+import { ChevronDown, LayoutDashboard, Terminal, FileClock } from "lucide-react";
 
 import {
   DropdownMenu,
