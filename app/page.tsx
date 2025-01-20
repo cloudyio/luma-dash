@@ -47,7 +47,7 @@ function Header({ session }) {
         {session ? (
           <ProfileMenu session={session} />
         ) : (
-          <Button asChild>
+          <Button asChild disabled className="opacity-50 cursor-not-allowed">
             <Link href="/signin">Sign In</Link>
           </Button>
         )}
