@@ -25,6 +25,6 @@ Currently, the bot is not yet available for public use. This is a demo of what i
 
 ## License
 
-This project is licensed under the MIT License. See the [LICENSE](https://github.com/cloudyio/luma-dash/blob/main/LICENSE) file for more details.
+This project is licensed under the MIT License. See the [LICENSE](https://github.com/cloudyio/luma-dash/blob/master/LICENSE) file for more details.
 
 
