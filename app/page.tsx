@@ -50,7 +50,7 @@ function Header({ session }) {
           <Button asChild disabled className="opacity-50 cursor-not-allowed">
             <Link href="/signin">Sign In</Link>
           </Button>
-        )}
+        )} 
       </nav>
     </header>
   );
@@ -151,7 +151,7 @@ function OpenSourceSection() {
           </div>
           <div className="space-x-4">
             <Button asChild>
-              <Link href="https://github.com/your-repo">View on GitHub</Link>
+              <Link href="https://github.com/cloudyio/luma-dash">View on GitHub</Link>
             </Button>
             <Button variant="outline" asChild>
               <Link href="#features">Learn More</Link>
