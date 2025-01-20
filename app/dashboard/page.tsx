@@ -1,172 +1,134 @@
-import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar"
-import { Search } from "lucide-react";
-import { AppSidebar } from "@/components/app-sidebar"
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card"
+"use client"
+
+import { useSession } from "next-auth/react"
+import { useEffect, useState } from "react"
+import { ServerCard } from "@/components/server-card"
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
-import { Badge } from "@/components/ui/badge"
-import { Switch } from "@/components/ui/switch"
+import { Button } from "@/components/ui/button"
+import { Search, Settings } from "lucide-react"
 
+const BOT_ID = "1301225522587631689"; 
 
-export default function Home() {
+export default function Dashboard() { 
+  const { data: session, status } = useSession()
+  const [servers, setServers] = useState<{ bot_in: any[], bot_not_in: any[] }>({
+    bot_in: [],
+    bot_not_in: []
+  })
+  const [searchQuery, setSearchQuery] = useState("")
+  const [error, setError] = useState(null)
+
+  useEffect(() => {
+    if (status === "authenticated") {
+      fetch("/api/get_user_guilds")
+        .then((res) => {
+          return res.json();
+        })
+        .then((data) => {
+          if (data.error) {
+            setError(data.error);
+            return;
+          }
+          setServers({
+            bot_in: data.bot_in || [],
+            bot_not_in: data.bot_not_in || []
+          });
+        })
+        .catch((error) => {
+          setError(error.message);
+        });
+    }
+  }, [status]) 
+
+  const filteredServers = {
+    bot_in: servers.bot_in.filter(server => 
+      server.name.toLowerCase().includes(searchQuery.toLowerCase())
+    ),
+    bot_not_in: servers.bot_not_in.filter(server => 
+      server.name.toLowerCase().includes(searchQuery.toLowerCase())
+    )
+  }
+
+  if (status === "loading") {
+    return (
+      <div className="flex items-center justify-center min-h-screen">
+        <p className="text-lg">Loading...</p>
+      </div>
+    )
+  }
+
+  if (!session) {
+    return (
+      <div className="flex items-center justify-center min-h-screen">
+        <p className="text-lg">Not logged in</p>
+      </div>
+    )
+  }
+
   return (
-    <div className="flex min-h-screen relative">
-      <SidebarProvider>
-        <div className="flex">
-          <AppSidebar />
-          <SidebarTrigger />
+    <div className="container mx-auto py-6 px-4 space-y-8">
+      <div className="flex flex-col gap-6">
+        <div className="flex items-center justify-between">
+          <h1 className="text-3xl md:text-4xl font-bold">Select a server:</h1>
+          <Button variant="ghost" size="icon">
+            <Settings className="h-5 w-5" />
+          </Button>
         </div>
-
-        <header className="absolute top-0 right-0 p-4 flex items-center space-x-3">
-          <Avatar>
-            <AvatarImage src="https://github.com/shadcn.ng" />
-            <AvatarFallback></AvatarFallback>
-          </Avatar>
-          <span className="font-medium">cloudy</span>
-        </header>
-
-        <main className="flex-1 p-6 mt-16">
-          <h1 className="text-3xl font-bold mb-4 flex justify-center md:justify-start">Basic Settings</h1>
-          <div className="flex flex-wrap justify-center md:justify-start">
-            <Card className="w-[350px] md:mr-4 mb-4 lg:mb-0">
-              <CardHeader>
-                <CardTitle>Server Info</CardTitle>
-                <CardDescription>Basic stats for (server_name)</CardDescription>
-              </CardHeader>
-              <CardContent>
-                <p>Members: 256</p>
-                <p>Bots: 13</p>
-                <p>Roles: 23</p>
-                <p>Channels: 30</p>
-              </CardContent>
-              <CardFooter>
-                <CardDescription>All stats are approximate.</CardDescription>
-              </CardFooter>
-            </Card>
-            <Card className="w-[350px]">
-              <CardHeader>
-                <CardTitle>Bot Settings</CardTitle>
-                <CardDescription>Edit basic bot settings for your server</CardDescription>
-              </CardHeader>
-              <CardContent>
-                <form>
-                  <div className="grid w-full items-center gap-4">
-                    <div className="flex flex-col space-y-1.5">
-                      <Label htmlFor="prefix">Prefix</Label>
-                      <Input id="prefix" placeholder="-" defaultValue="-" />
-                    </div>
-                    <div className="flex flex-col space-y-1.5">
-                      <Label htmlFor="nick">Nickname</Label>
-                      <Input id="nick" placeholder="aiobot"/>
-                    </div>
-                  </div>
-                </form>
-              </CardContent>
-              <CardFooter className="flex justify-between"></CardFooter>
-            </Card>
-          </div>
-          <h1 className="text-3xl font-bold mt-4 flex justify-center md:justify-start mb-4">Modules</h1>
-          <div className="relative mb-3 w-7/12">
-          <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-500" />
-          <Input 
-            type="text" 
-            placeholder="Search Modules" 
-            className="h-10 pl-10"
+        
+        <div className="relative">
+          <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+          <Input
+            placeholder="Search servers..."
+            className="pl-9"
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
           />
         </div>
-          <div className="flex flex-wrap justify-center md:justify-start">
-            
-            <Card className="w-[350px] md:mr-4 mb-4  ">
-              <CardHeader>
-              <CardTitle>
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center">
-                    Moderation
-                    <Badge className="ml-3">Core</Badge>
-                  </div>
-                  <Switch />
-                </div>
-              </CardTitle>
-              </CardHeader>
-              <CardContent>
-                Use a high quality moderation module to manage your server
-              </CardContent>
-              <CardFooter>
-                <CardDescription>It is recomended to have this on</CardDescription>
-              </CardFooter>
-            </Card>
+      </div>
 
-            <Card className="w-[350px] md:mr-4 mb-4 ">
-              <CardHeader>
-              <CardTitle>
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center">
-                    Moderation
-                    
-                  </div>
-                  <Switch />
-                </div>
-              </CardTitle>
-              </CardHeader>
-              <CardContent>
-                Entertain your server members with simple but fun commands
-              </CardContent>
-              <CardFooter>
-                <CardDescription>Can become spammy</CardDescription>
-              </CardFooter>
-            </Card>
-
-            <Card className="w-[350px] md:mr-4 mb-4">
-              <CardHeader>
-              <CardTitle>
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center">
-                    Misc
-                    
-                  </div>
-                  <Switch />
-                </div>
-              </CardTitle>
-              </CardHeader>
-              <CardContent>
-                Random commands which dont have a specific module
-              </CardContent>
-              <CardFooter>
-                <CardDescription>Idk what to put for this one</CardDescription>
-              </CardFooter>
-            </Card>
-
-            <Card className="w-[350px] md:mr-4 mb-4">
-              <CardHeader>
-              <CardTitle>
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center">
-                    Tickets
-                    <Badge className="ml-3">Core</Badge>
-                  </div>
-                  <Switch />
-                </div>
-              </CardTitle>
-              </CardHeader>
-              <CardContent>
-                Ticket system to manage requests on your server
-              </CardContent>
-              <CardFooter>
-                <CardDescription>empty</CardDescription>
-              </CardFooter>
-            </Card>
-            
+      {error ? (
+        <div className="bg-destructive/15 text-destructive p-4 rounded-lg">
+          {error}
+        </div>
+      ) : (
+        <Tabs defaultValue="managed" className="space-y-6">
+          <div className="flex md:block justify-center w-full border-b pb-2">
+            <TabsList className="inline-flex h-10">
+              <TabsTrigger value="managed">
+                Bot Servers ({filteredServers.bot_in.length})
+              </TabsTrigger>
+              <TabsTrigger value="available">
+                Available Servers ({filteredServers.bot_not_in.length})
+              </TabsTrigger>
+            </TabsList>
           </div>
-        </main>
-      </SidebarProvider>
+
+          <TabsContent value="managed" className="space-y-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+              {filteredServers.bot_in.map((server) => (
+                <ServerCard 
+                  key={server.id} 
+                  server={{...server, bot_added: true}}
+                  botId={BOT_ID}
+                />
+              ))}
+            </div>
+          </TabsContent>
+
+          <TabsContent value="available" className="space-y-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+              {filteredServers.bot_not_in.map((server) => (
+                <ServerCard 
+                  key={server.id} 
+                  server={{...server, bot_added: false}}
+                  botId={BOT_ID}
+                />
+              ))}
+            </div>
+          </TabsContent>
+        </Tabs>
+      )}
     </div>
   )
 }

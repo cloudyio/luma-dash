@@ -1,0 +1,44 @@
+generator client {
+  provider        = "prisma-client-js"
+  previewFeatures = ["tracing"]
+}
+
+datasource db {
+  provider = "mongodb"
+  url      = env("MONGO_URI")
+}
+
+model User {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  discordId String   @unique
+  username  String
+  avatar    String?
+  guilds    GuildMember[]
+}
+
+model Guild {
+  id        String         @id @default(auto()) @map("_id") @db.ObjectId
+  discordId String         @unique
+  name      String
+  icon      String?
+  settings  GuildSettings?
+  members   GuildMember[]
+}
+
+model GuildSettings {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  guildId   String   @unique
+  prefix    String   @default("!")
+  modules   Json
+  guild     Guild    @relation(fields: [guildId], references: [discordId])
+}
+
+model GuildMember {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  userId    String
+  guildId   String
+  nickname  String?
+  roles     String[]
+  user      User     @relation(fields: [userId], references: [discordId])
+  guild     Guild    @relation(fields: [guildId], references: [discordId])
+}
