@@ -48,7 +48,7 @@ function Header({ session }) {
           <ProfileMenu session={session} />
         ) : (
           <Button asChild disabled className="opacity-50 cursor-not-allowed">
-            <Link href="">Sign In</Link>
+            <Link href="/">Sign In</Link>
           </Button>
         )} 
       </nav>
