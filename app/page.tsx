@@ -91,7 +91,7 @@ function HeroSection() {
               Meet Luma
             </h1>
             <p className="mx-auto max-w-[700px] text-gray-100 md:text-xl dark:text-gray-400">
-              The ultimate Discord companion. Moderation, music, games, and more - all in one powerful bot (comming soon).
+              The ultimate Discord companion. Moderation, music, games, and more - all in one powerful bot (coming soon).
             </p>
           </div>
           <div className="space-x-4">
