@@ -40,12 +40,8 @@ export default function ModerationPage({ params }: { params: { guildId: string }
   const { toast } = useToast()
 
   useEffect(() => {
-    const fetchGuildId = async () => {
-      const { guildId } = await params
-      setGuildId(guildId)
-    }
-    fetchGuildId()
-  }, [params])
+    setGuildId(params.guildId)
+  }, [params.guildId])
 
   useEffect(() => {
     if (guildId) {

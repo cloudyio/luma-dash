@@ -1,7 +1,14 @@
+"use client"
+
 import { signIn } from "@/auth";
 import { Button } from "@/components/ui/button";
+import { useCallback } from "react";
 
 export default function SignIn() {
+  const handleSignIn = useCallback(async () => {
+    await signIn("discord", { callbackUrl: "/dashboard" });
+  }, []);
+
   return (
     <div className="flex flex-col min-h-screen dark bg-gray-900 text-gray-100 items-center justify-center">
       <div className="container px-4 md:px-6">
@@ -10,14 +17,9 @@ export default function SignIn() {
             Sign In
           </h1>
           <div className="bg-gray-800 p-6 rounded-lg shadow-lg w-full max-w-md">
-            <form
-              action={async () => {
-                "use server";
-                await signIn("discord", { redirectTo: "/dashboard" });
-              }}
-            >
-              <Button type="submit" size="lg" className="w-full">Sign In with Discord</Button>
-            </form>
+            <Button size="lg" className="w-full" onClick={handleSignIn}>
+              Sign In with Discord
+            </Button>
           </div>
         </div>
       </div>
